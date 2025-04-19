@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
 
     [SerializeField] float runSpeed = 2f;
+    [SerializeField] float jumpHeight = 5f;
 
     void Start()
     {
@@ -35,12 +36,6 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void OnMove(InputValue inputValue)
-    {
-        moveInput = inputValue.Get<Vector2>();
-        // Debug.Log($"X: {myRigidbody.velocity.x}");
-    }
-
     void FlipSprite()
     {
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
@@ -50,4 +45,19 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x), 1f);
         }
     }
+
+    void OnMove(InputValue inputValue)
+    {
+        moveInput = inputValue.Get<Vector2>();
+        // Debug.Log($"X: {myRigidbody.velocity.x}");
+    }
+
+    void OnJump(InputValue inputValue)
+    {
+        if (inputValue.isPressed)
+        {
+            myRigidbody.velocity = new Vector2(0f, jumpHeight);
+        }
+    }
+
 }
