@@ -51,5 +51,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "TileVania.sln"
+    "dotnet.defaultSolution": "TileVania.sln",
+    "cSpell.words": [
+        "Mathf"
+    ]
 }
