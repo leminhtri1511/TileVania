@@ -10,7 +10,8 @@ public class PlayerMovement : MonoBehaviour
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
     Animator myAnimator;
-    CapsuleCollider2D myCapsuleCollider2D;
+    CapsuleCollider2D myBodyCollider;
+    BoxCollider2D myFeetCollider;
 
     [SerializeField] float runSpeed = 2f;
     [SerializeField] float jumpHeight = 5f;
@@ -22,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCapsuleCollider2D = GetComponent<CapsuleCollider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
         startingGravityScale = myRigidbody.gravityScale;
     }
 
@@ -44,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ClimbLadder()
     {
-        var isTouchingLadder = myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing"));
+        var isTouchingLadder = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"));
         bool isPlayerClimbing = Mathf.Abs(myRigidbody.velocity.y) > Mathf.Epsilon;
 
         if (isTouchingLadder)
@@ -64,38 +66,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // void ClimbLadder()
-    // {
-    //     var isTouchingLadder = myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing"));
-
-    //     if (isTouchingLadder)
-    //     {
-    //         if (Input.GetKey(KeyCode.W))
-    //         {
-    //             var changeYVelocity = new Vector2(0f, climbSpeed);
-    //             myRigidbody.velocity = changeYVelocity;
-    //             Debug.Log(changeYVelocity);
-
-    //         }
-    //         else if (Input.GetKey(KeyCode.S))
-    //         {
-    //             var changeYVelocity = new Vector2(0f, -climbSpeed);
-    //             myRigidbody.velocity = changeYVelocity;
-    //             Debug.Log(changeYVelocity);
-    //         }
-    //         else if (!Input.anyKey)
-    //         {
-    //             var changeYVelocity = new Vector2(0, 0);
-    //             myRigidbody.velocity = changeYVelocity;
-    //             myRigidbody.gravityScale = 0;
-
-
-    //             Debug.Log($"changeYVelocity: {changeYVelocity}");
-    //         }
-    //     }
-    //     else myRigidbody.gravityScale = 8;
-    // }
-
     void FlipSprite()
     {
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
@@ -114,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue inputValue)
     {
-        var isTouchingGround = myCapsuleCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        var isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (inputValue.isPressed && isTouchingGround)
         {
