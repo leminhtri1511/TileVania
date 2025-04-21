@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     Animator myAnimator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
+    SpriteRenderer spriteRenderer;
+    bool isAlive = true;
 
     [SerializeField] float runSpeed = 2f;
     [SerializeField] float jumpHeight = 5f;
@@ -25,14 +27,21 @@ public class PlayerMovement : MonoBehaviour
         myAnimator = GetComponent<Animator>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         startingGravityScale = myRigidbody.gravityScale;
     }
 
     void Update()
     {
+
+        if (!isAlive)
+        {
+            return;
+        }
         Run();
         ClimbLadder();
         FlipSprite();
+        Die();
     }
 
     void Run()
@@ -46,6 +55,10 @@ public class PlayerMovement : MonoBehaviour
 
     void ClimbLadder()
     {
+        if (!isAlive)
+        {
+            return;
+        }
         var isTouchingLadder = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"));
         bool isPlayerClimbing = Mathf.Abs(myRigidbody.velocity.y) > Mathf.Epsilon;
 
@@ -76,14 +89,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnMove(InputValue inputValue)
+    public void OnMove(InputValue inputValue)
     {
-        moveInput = inputValue.Get<Vector2>();
-        // Debug.Log($"X: {myRigidbody.velocity.x}");
+        if (!isAlive)
+        {
+            return;
+        }
+        if (isAlive)
+        {
+            moveInput = inputValue.Get<Vector2>();
+        }
+        else
+            return;
     }
 
     void OnJump(InputValue inputValue)
     {
+        if (!isAlive)
+        {
+            return;
+        }
         var isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (inputValue.isPressed && isTouchingGround)
@@ -92,6 +117,17 @@ public class PlayerMovement : MonoBehaviour
         }
         else
             return;
+    }
+
+    void Die()
+    {
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("Dying");
+            myRigidbody.velocity = new Vector2(0f, 20f);
+            spriteRenderer.color = new Color(1, 0, 0, 1);
+        }
     }
 
 }

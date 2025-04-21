@@ -31,7 +31,7 @@ public class EnemyMovement : MonoBehaviour
 
     void FlipSprite()
     {
-        transform.localScale = new Vector2(-(Mathf.Sign(myRigidbody.velocity.x)), 1f);
+        transform.localScale = new Vector2(-Mathf.Sign(myRigidbody.velocity.x), 1f);
     }
 
 
