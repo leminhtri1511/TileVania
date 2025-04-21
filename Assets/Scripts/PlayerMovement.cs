@@ -7,18 +7,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] float runSpeed = 2f;
+    [SerializeField] float jumpHeight = 5f;
+    [SerializeField] float climbSpeed = 5f;
+    [SerializeField] Vector2 deathReact = new Vector2(10f, 20f);
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform gun;
+
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
     Animator myAnimator;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
     SpriteRenderer spriteRenderer;
+
     bool isAlive = true;
-
-    [SerializeField] float runSpeed = 2f;
-    [SerializeField] float jumpHeight = 5f;
-    [SerializeField] float climbSpeed = 5f;
-
     float startingGravityScale;
 
     void Start()
@@ -89,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void OnMove(InputValue inputValue)
+    void OnMove(InputValue inputValue)
     {
         if (!isAlive)
         {
@@ -119,13 +122,23 @@ public class PlayerMovement : MonoBehaviour
             return;
     }
 
+    void OnFire(InputValue inputValue)
+    {
+        if (!isAlive)
+        {
+            return;
+        }
+
+        Instantiate(bullet, gun.position, transform.rotation);
+    }
+
     void Die()
     {
         if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
         {
             isAlive = false;
             myAnimator.SetTrigger("Dying");
-            myRigidbody.velocity = new Vector2(0f, 20f);
+            myRigidbody.velocity = deathReact;
             spriteRenderer.color = new Color(1, 0, 0, 1);
         }
     }
