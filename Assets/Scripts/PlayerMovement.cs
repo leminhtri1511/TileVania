@@ -36,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-
         if (!isAlive)
         {
             return;
@@ -51,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 playerVelocity = new Vector2(moveInput.x * runSpeed, myRigidbody.velocity.y);
         bool isPlayerRunning = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
-
         myRigidbody.velocity = playerVelocity;
         myAnimator.SetBool("isRunning", isPlayerRunning);
     }
@@ -62,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
         var isTouchingLadder = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"));
         bool isPlayerClimbing = Mathf.Abs(myRigidbody.velocity.y) > Mathf.Epsilon;
 
@@ -98,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
         if (isAlive)
         {
             moveInput = inputValue.Get<Vector2>();
@@ -112,6 +112,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
         var isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
         if (inputValue.isPressed && isTouchingGround)
@@ -142,5 +143,4 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.color = new Color(1, 0, 0, 1);
         }
     }
-
 }
